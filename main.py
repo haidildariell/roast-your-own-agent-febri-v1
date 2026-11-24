@@ -1,21 +1,30 @@
-#!/usr/bin/env python3
-"""Roast Your Own Agent entry.
-
-Writes a single roast line about our own AI agent to entry.txt.
-Deterministic: no network, no randomness, no external files.
-"""
+"""Roast your own agent: one roast line to entry.txt."""
 
 import os
 
-LINE = "My agent confidently wrote the file, ran the tests, and summarized the success \u2014 all in a folder that never existed."
+LINE = "My agent confidently wrote the file, ran the tests, and summarized the success — all in a folder that never existed."
+
+
+def get_roast_line():
+    line = LINE
+    if not line:
+        raise ValueError("roast line must not be empty")
+    if len(line) > 200:
+        raise ValueError("roast line must be at most 200 characters")
+    return line
+
+
+def write_entry(output_dir, line):
+    os.makedirs(output_dir, exist_ok=True)
+    path = os.path.join(output_dir, "entry.txt")
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(line + "\n")
 
 
 def main():
-    out_dir = os.environ.get("OUTPUT_DIR", "/output")
-    os.makedirs(out_dir, exist_ok=True)
-    path = os.path.join(out_dir, "entry.txt")
-    with open(path, "w", encoding="utf-8", newline="\n") as f:
-        f.write(LINE + "\n")
+    output_dir = os.environ.get("OUTPUT_DIR", "/output")
+    line = get_roast_line()
+    write_entry(output_dir, line)
 
 
 if __name__ == "__main__":
